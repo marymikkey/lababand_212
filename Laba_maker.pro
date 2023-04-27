@@ -28,27 +28,100 @@ contains(TARGET_ARCH, x86_64) {
 win32-g++:contains(ARCHITECTURE, x86): {
     INCLUDEPATH += C:/Boost_for_Qt/include/boost-1_66
     LIBS += "-LC:/Boost_for_Qt/lib" \
-        -llibboost_locale-mgw112-mt-x64-1_66
+        #-llibboost_locale-mgw112-mt-x64-1_66 \
+        #-llibboost_atomic-mgw112-mt-x64-1_66 \
+        #-llibboost_chrono-mgw112-mt-x64-1_66 \
+        #-llibboost_container-mgw112-mt-x64-1_66 \
+        #-llibboost_context-mgw112-mt-x64-1_66 \
+        #-llibboost_coroutine-mgw112-mt-x64-1_66 \
+        #-llibboost_exception-mgw112-mt-x64-1_66 \
+        #-llibboost_filesystem-mgw112-mt-x64-1_66 \
+        #-llibboost_graph-mgw112-mt-x64-1_66 \
+        #-llibboost_log_setup-mgw112-mt-x64-1_66 \
+        #-llibboost_log-mgw112-mt-x64-1_66 \
+        #-llibboost_math_c99-mgw112-mt-x64-1_66 \
+        #-llibboost_random-mgw112-mt-x64-1_66 \
+        #-llibboost_regex-mgw112-mt-x64-1_66 \
+        #-llibboost_signals-mgw112-mt-x64-1_66 \
+        #-llibboost_serialization-mgw112-mt-x64-1_66 \
+        #-llibboost_system-mgw112-mt-x64-1_66 \
+        -llibboost_iostreams-mgw112-mt-x64-1_66 \
+        -llibboost_type_erasure-mgw112-mt-x64-1_66
 }
 win32-g++:contains(ARCHITECTURE, x64): {
     INCLUDEPATH +=C:/Boost_for_Qt/include/boost-1_66
     LIBS += "-LC:/Boost_for_Qt/lib" \
-        -llibboost_locale-mgw112-mt-x64-1_66
+        #-llibboost_locale-mgw112-mt-x64-1_66 \
+        #-llibboost_atomic-mgw112-mt-x64-1_66 \
+        #-llibboost_chrono-mgw112-mt-x64-1_66 \
+        #-llibboost_container-mgw112-mt-x64-1_66 \
+        #-llibboost_context-mgw112-mt-x64-1_66 \
+        #-llibboost_coroutine-mgw112-mt-x64-1_66 \
+        #-llibboost_exception-mgw112-mt-x64-1_66 \
+        #-llibboost_filesystem-mgw112-mt-x64-1_66 \
+        #-llibboost_graph-mgw112-mt-x64-1_66 \
+        #-llibboost_log_setup-mgw112-mt-x64-1_66 \
+        #-llibboost_log-mgw112-mt-x64-1_66 \
+        #-llibboost_math_c99-mgw112-mt-x64-1_66 \
+        #-llibboost_random-mgw112-mt-x64-1_66 \
+        #-llibboost_regex-mgw112-mt-x64-1_66 \
+        #-llibboost_signals-mgw112-mt-x64-1_66 \
+        #-llibboost_serialization-mgw112-mt-x64-1_66 \
+        #-llibboost_system-mgw112-mt-x64-1_66 \
+        -llibboost_iostreams-mgw112-mt-x64-1_66 \
+        -llibboost_type_erasure-mgw112-mt-x64-1_66
 }
 win32-msvc*:contains(ARCHITECTURE, x86) {
     INCLUDEPATH += C:/Boost_for_Qt/include/boost-1_66
     LIBS += "-LC:/Boost_for_Qt/lib" \
-        -llibboost_locale-mgw112-mt-x64-1_66
+        -llibboost_locale-mgw112-mt-x64-1_66 \
+        #-llibboost_atomic-mgw112-mt-x64-1_66 \
+        #-llibboost_chrono-mgw112-mt-x64-1_66 \
+        #-llibboost_container-mgw112-mt-x64-1_66 \
+        #-llibboost_context-mgw112-mt-x64-1_66 \
+        #-llibboost_coroutine-mgw112-mt-x64-1_66 \
+        #-llibboost_exception-mgw112-mt-x64-1_66 \
+        #-llibboost_filesystem-mgw112-mt-x64-1_66 \
+        #-llibboost_graph-mgw112-mt-x64-1_66 \
+        #-llibboost_log_setup-mgw112-mt-x64-1_66 \
+        #-llibboost_log-mgw112-mt-x64-1_66 \
+        #-llibboost_math_c99-mgw112-mt-x64-1_66 \
+        #-llibboost_random-mgw112-mt-x64-1_66 \
+        #-llibboost_regex-mgw112-mt-x64-1_66 \
+        #-llibboost_signals-mgw112-mt-x64-1_66 \
+        #-llibboost_serialization-mgw112-mt-x64-1_66 \
+        #-llibboost_system-mgw112-mt-x64-1_66 \
+        -llibboost_iostreams-mgw112-mt-x64-1_66 \
+        -llibboost_type_erasure-mgw112-mt-x64-1_66
 }
 win32-msvc*:contains(ARCHITECTURE, x64) {
     INCLUDEPATH += C:/Boost_for_Qt/include/boost-1_66
     LIBS += "-LC:/Boost_for_Qt/lib" \
-        -llibboost_locale-mgw112-mt-x64-1_66
+        #-llibboost_locale-mgw112-mt-x64-1_66 \
+        #-llibboost_atomic-mgw112-mt-x64-1_66 \
+        #-llibboost_chrono-mgw112-mt-x64-1_66 \
+        #-llibboost_container-mgw112-mt-x64-1_66 \
+        #-llibboost_context-mgw112-mt-x64-1_66 \
+        #-llibboost_coroutine-mgw112-mt-x64-1_66 \
+        #-llibboost_exception-mgw112-mt-x64-1_66 \
+        #-llibboost_filesystem-mgw112-mt-x64-1_66 \
+        #-llibboost_graph-mgw112-mt-x64-1_66 \
+        #-llibboost_log_setup-mgw112-mt-x64-1_66 \
+        #-llibboost_log-mgw112-mt-x64-1_66 \
+        #-llibboost_math_c99-mgw112-mt-x64-1_66 \
+        #-llibboost_random-mgw112-mt-x64-1_66 \
+        #-llibboost_regex-mgw112-mt-x64-1_66 \
+        #-llibboost_signals-mgw112-mt-x64-1_66 \
+        #-llibboost_serialization-mgw112-mt-x64-1_66 \
+        #-llibboost_system-mgw112-mt-x64-1_66 \
+        -llibboost_iostreams-mgw112-mt-x64-1_66 \
+        -llibboost_type_erasure-mgw112-mt-x64-1_66
 }
 
 
 
 SOURCES += \
+    FormulaParser.cpp \
     Manager.cpp \
     VariableData.cpp \
     VisualModel.cpp \
@@ -59,6 +132,7 @@ SOURCES += \
     qcustomplot.cpp
 
 HEADERS += \
+    FormulaParser.h \
     Manager.h \
     VariableData.h \
     VisualModel.h \

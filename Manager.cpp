@@ -28,6 +28,7 @@ void Manager::addCalculated(VariableData & variable){
     calculated.append(variable);
 }
 
-static Manager * instance(){
-    return new Manager();
+Manager *Manager::instance()
+{
+    return GlobalManager;
 }
