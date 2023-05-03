@@ -122,23 +122,32 @@ win32-msvc*:contains(ARCHITECTURE, x64) {
 
 SOURCES += \
     FormulaParser.cpp \
+    Grammar.cpp \
+    IMPCSV.cpp \
     Manager.cpp \
+    Parser.cpp \
     VariableData.cpp \
     VisualModel.cpp \
     colordelegate.cpp \
     comboboxdelegate.cpp \
     main.cpp \
     mainwindow.cpp \
+    plotscatter.cpp \
     qcustomplot.cpp
 
 HEADERS += \
     FormulaParser.h \
+    Grammar.h \
+    IMPCSV.h \
     Manager.h \
+    Parser.h \
+    PlotChoice.h \
     VariableData.h \
     VisualModel.h \
     colordelegate.h \
     comboboxdelegate.h \
     mainwindow.h \
+    plot.h \
     qcustomplot.h
 
 FORMS += \
