@@ -3,10 +3,12 @@
 #include <iomanip>
 #include <stdexcept>
 #include <boost/spirit/include/qi.hpp>
+#include <boost/phoenix/phoenix.hpp>
+#include <QApplication>
 namespace qi = boost::spirit::qi;
 
 template< class Parser, class Skipper, class ... Args>
-void CanParce(std::string & str, const Parser & parser, const Skipper & skipper, Args && ...Args)
+void CanParce(std::string & str, const Parser & parser, const Skipper & skipper, Args && ...args)
 {
     std::string::const_iterator begin = str.begin(), end = str.end();
     qi::phrase_parse(begin,end,parser,skipper,std::forward<Args>(args) ...);
@@ -18,14 +20,16 @@ void CanParce(std::string & str, const Parser & parser, const Skipper & skipper,
 
 
 
-class AbsSyntaxTreeNode
+class AbstractSyntaxTreeNode
 {
 public:
     virtual double evaluate() = 0;
-    virtual ~AbsSyntaxTreeNode(){ }
+    virtual ~AbstractSyntaxTreeNode(){ }
 };
 
-using ASTN = AbsSyntaxTreeNode;
+using ASTN = AbstractSyntaxTreeNode;
+
+
 
 template<char Operator>
 class OperatorNode : public ASTN
@@ -36,7 +40,10 @@ public:
         this->right = right;
     }
     double evaluate(){
-        //dskkkskdksk
+        if (Operator == '+')
+            return left->evaluate() + right->evaluate();
+        else if (Operator == '*')
+            return left->evaluate() * right->evaluate();
     }
     ~OperatorNode(){
         delete left;
@@ -59,6 +66,17 @@ private:
 };
 
 
+class ArgumentsNode : public ASTN
+{
+public:
+    ArgumentsNode(const ASTN* a, const ASTN* b): a(a), b(b){}
+    double evaluate(){
+        return a->evaluate();
+    }
+private:
+    ASTN * a;
+    ASTN * b;
+};
 
 class AssignmentNode : public ASTN
 {
@@ -77,13 +95,19 @@ private:
 class FuncNode : public ASTN
 {
 public:
-    FuncNode(std::string identifier, QList<ASTN*> & values : values(values), identifier(identifier){}
+    FuncNode(std::string identifier, QList<ASTN*> & values) : values(values), identifier(identifier){}
     double evaluate(){
-        double val = values[0]->evaluate();
+        auto vs = values[0]->evaluate().toList();
         if (identifier == "sqrt")
-            return sqrt(val);
+            return sqrt(vs[0].toDouble());
         else if (identifier == "square")
-            return val*val;
+            return vs[0].toDouble()*vs[0].toDouble();
+        else if (identifier == "min"){
+            double ret = vs[0].toDouble();
+            for (auto & v: vs)
+                ret = std::min(v.toDouble(),ret);
+                return ret;
+        }
         std::cout << "Unknown function: " << std::quoted(identifier) << std::endl;
         throw std::runtime_error("Parse error");
     }
@@ -91,5 +115,17 @@ private:
     std::string identifier;
     QList<ASTN*> values;
 };
+
+class VariableNode : public ASTN
+{
+public:
+    VariableNode(std::string identifier) : identifier(identifier){}
+    double evaluate(){
+        return variable_map[identifier];
+    }
+private:
+    std::string identifier;
+};
+
 
 #endif // PARSER_H
