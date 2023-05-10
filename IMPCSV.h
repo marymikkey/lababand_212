@@ -4,8 +4,8 @@
 #include<QWidget>
 #include "imp.h"
 
-class IMPCSV : public IMP {
-    Q_OBJECT
+class IMPCSV : public IO
+{Q_OBJECT
 public:
     IMPCSV(QWidget* parent = nullptr);
     ~IMPCSV();

@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-IMPCSV::IMPCSV(QWidget* parent) :IMP(parent){}
+IMPCSV::IMPCSV(QWidget* parent) :IO(parent){}
 
 IMPCSV::~IMPCSV() {}
 

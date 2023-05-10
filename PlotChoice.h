@@ -3,7 +3,7 @@
 
 #include "plot.h"
 #include "plotscatter.h"
-#include "plothist.h"
+#include "ploshist.h"
 
 #include <QDialog>
 
