@@ -28,7 +28,7 @@ contains(TARGET_ARCH, x86_64) {
 win32-g++:contains(ARCHITECTURE, x86): {
     INCLUDEPATH += C:/Boost_for_Qt/include/boost-1_66
     LIBS += "-LC:/Boost_for_Qt/lib" \
-        #-llibboost_locale-mgw112-mt-x64-1_66 \
+        -llibboost_locale-mgw112-mt-x64-1_66 \
         #-llibboost_atomic-mgw112-mt-x64-1_66 \
         #-llibboost_chrono-mgw112-mt-x64-1_66 \
         #-llibboost_container-mgw112-mt-x64-1_66 \
@@ -51,7 +51,7 @@ win32-g++:contains(ARCHITECTURE, x86): {
 win32-g++:contains(ARCHITECTURE, x64): {
     INCLUDEPATH +=C:/Boost_for_Qt/include/boost-1_66
     LIBS += "-LC:/Boost_for_Qt/lib" \
-        #-llibboost_locale-mgw112-mt-x64-1_66 \
+        -llibboost_locale-mgw112-mt-x64-1_66 \
         #-llibboost_atomic-mgw112-mt-x64-1_66 \
         #-llibboost_chrono-mgw112-mt-x64-1_66 \
         #-llibboost_container-mgw112-mt-x64-1_66 \
@@ -97,7 +97,7 @@ win32-msvc*:contains(ARCHITECTURE, x86) {
 win32-msvc*:contains(ARCHITECTURE, x64) {
     INCLUDEPATH += C:/Boost_for_Qt/include/boost-1_66
     LIBS += "-LC:/Boost_for_Qt/lib" \
-        #-llibboost_locale-mgw112-mt-x64-1_66 \
+        -llibboost_locale-mgw112-mt-x64-1_66 \
         #-llibboost_atomic-mgw112-mt-x64-1_66 \
         #-llibboost_chrono-mgw112-mt-x64-1_66 \
         #-llibboost_container-mgw112-mt-x64-1_66 \
@@ -121,7 +121,6 @@ win32-msvc*:contains(ARCHITECTURE, x64) {
 
 
 SOURCES += \
-    FormulaParser.cpp \
     Grammar.cpp \
     IMPCSV.cpp \
     Manager.cpp \
@@ -136,7 +135,6 @@ SOURCES += \
     qcustomplot.cpp
 
 HEADERS += \
-    FormulaParser.h \
     Grammar.h \
     IMPCSV.h \
     Manager.h \
