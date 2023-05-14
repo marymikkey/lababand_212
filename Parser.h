@@ -11,15 +11,14 @@
 namespace qi = boost::spirit::qi;
 
 //extern std::map<std::string, QVariant> variable_map;
-QList<QPair<double,double>> vect;
+//QList<QPair<double,double>> vect;
 std::map<std::string, QVariant> variable_map;
-
-
+//extern std::map<std::string, QVariant> variable_map;
 
 
 
 template< class Parser, class Skipper, class ... Args>
-void CanParce(const std::string & input, const Parser & parser, const Skipper & skipper, Args && ...args)
+void ParseOrDie(const std::string & input, const Parser & parser, const Skipper & skipper, Args && ...args)
 {
     std::string::const_iterator begin = input.begin(), end = input.end();
     qi::phrase_parse(begin,end,parser,skipper,std::forward<Args>(args) ...);
@@ -62,6 +61,11 @@ public:
                         result.append(elem.toDouble() + r[0].toDouble());
                     }
             }
+            else if (l.size() == r.size()){
+                for (int i = 0; i < r.size(); ++i){
+                    result.append(l[i].toDouble() + r[i].toDouble());
+                }
+            }
             else{
                 std::cout << "Vectors of different length detected: " << l.size() << " and " << r.size() << std::endl;
                 throw std::runtime_error("Calculation error");
@@ -95,14 +99,16 @@ private:
 class ArgumentsNode : public ASTN
 {
 public:
-    ArgumentsNode(const ASTNPtr& a, const  ASTNPtr& b): a(a), b(b){}
+    ArgumentsNode(ASTNPtr& a, ASTNPtr& b): a(a), b(b){}
     QVariant evaluate(){
-        return a->evaluate();
+        QVariant av = a->evaluate(), bv = b->evaluate();
+        return QList<QVariant>({av}) + bv.toList();
     }
 private:
-    ASTN * a;
-    ASTN * b;
+    ASTNPtr a,b;
 };
+
+
 
 class AssignmentNode : public ASTN
 {
@@ -122,6 +128,7 @@ class FunctionNode : public ASTN
 {
 public:
     FunctionNode(std::string identifier, const ASTNPtr & values) : identifier(identifier), values(values){}
+
     QVariant evaluate(){
         auto vs = values->evaluate().toList();
         if (identifier == "one")
