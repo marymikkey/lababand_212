@@ -15687,6 +15687,9 @@ void QCustomPlot::mouseReleaseEvent(QMouseEvent *event)
   Event handler for mouse wheel events. First, the \ref mouseWheel signal is emitted. Then
   determines the affected layerable and forwards the event to it.
 */
+
+
+
 void QCustomPlot::wheelEvent(QWheelEvent *event)
 {
   emit mouseWheel(event);
