@@ -18,6 +18,7 @@ public:
 private slots:
 
     void draw();
+    void plotOptions();
 
 private:
     Ui::MainWindow *ui;

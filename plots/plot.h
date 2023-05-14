@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include "qcustomplot.h"
-//#include "variabledata.h"
 
 class Plot : public  QWidget
 {
@@ -13,7 +12,7 @@ public:
     ~Plot() = default;
 
     virtual void draw(QCustomPlot *plot) = 0;
-    //virtual void options() = 0;
+    virtual void options() = 0;
 };
 
 #endif // PLOT_H
