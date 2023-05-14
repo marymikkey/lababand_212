@@ -154,7 +154,10 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     manager.cpp \
-    plots/plot_scatter.cpp \
+    plots/plot2d.cpp \
+    plots/plotchoice.cpp \
+    plots/plothist.cpp \
+    plots/plotscatter.cpp \
     qcpdocumentobject.cpp \
     qcustomplot.cpp \
     variable_data.cpp
@@ -165,7 +168,10 @@ HEADERS += \
     mainwindow.h \
     manager.h \
     plots/plot.h \
-    plots/plot_scatter.h \
+    plots/plot2d.h \
+    plots/plotchoice.h \
+    plots/plothist.h \
+    plots/plotscatter.h \
     qcpdocumentobject.h \
     qcustomplot.h \
     variable_data.h
