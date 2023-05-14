@@ -1,7 +1,5 @@
 #include "Parser.h"
-
-/*#ifndef PARSER_H
-#define PARSER_H
+#include "Grammar.h"
 #include <iomanip>
 #include <iostream>
 #include <map>
@@ -13,15 +11,12 @@
 namespace qi = boost::spirit::qi;
 
 //extern std::map<std::string, QVariant> variable_map;
-QList<QPair<double,double>> vect;
-std::map<std::string, QVariant> variable_map;
-
-
-
-
+//QList<QPair<double,double>> vect;
+extern std::map<std::string, QVariant> variable_map;
+//extern std::map<std::string, QVariant> variable_map;
 
 template< class Parser, class Skipper, class ... Args>
-void CanParce(const std::string & input, const Parser & parser, const Skipper & skipper, Args && ...args)
+void ParseOrDie(const std::string & input, const Parser & parser, const Skipper & skipper, Args && ...args)
 {
     std::string::const_iterator begin = input.begin(), end = input.end();
     qi::phrase_parse(begin,end,parser,skipper,std::forward<Args>(args) ...);
@@ -43,6 +38,11 @@ public:
 using ASTN = AbstractSyntaxTreeNode;
 using ASTNPtr = AbstractSyntaxTreeNode *;
 
+QVariant ApplyVectorOperation(QList<QVariant> & l, QList<QVariant> & r, double (*f)(double, double));
+
+
+
+
 
 template<char Operator>
 class OperatorNode : public ASTN
@@ -50,28 +50,23 @@ class OperatorNode : public ASTN
 public:
     OperatorNode(const ASTNPtr& left, const ASTNPtr& right) : left(left), right(right){ }
     QVariant evaluate(){
-        if (Operator == '+'){
-            QList<QVariant> l = left->evaluate().toList();
-            QList<QVariant> r = right->evaluate().toList();
-            QList<QVariant> result;
-            if (l.size() == 1){
-                for (QVariant & elem : r){
-                    result.append(l[0].toDouble() + elem.toDouble());
-                }
-            }
-            else if (r.size() == 1){
-                    for (QVariant & elem : l){
-                        result.append(elem.toDouble() + r[0].toDouble());
-                    }
+        QList<QVariant> l = left->evaluate().toList();
+        QList<QVariant> r = right->evaluate().toList();
+        if (Operator == '+')
+            return ApplyVectorOperation(l,r,[](double a, double b){return a + b;});
+        else if (Operator == '-')
+            return ApplyVectorOperation(l,r,[](double a, double b){return a - b;});
+        else if (Operator == '*')
+            return ApplyVectorOperation(l,r,[](double a, double b){return a * b;});
+        else if (Operator == '/'){
+            if (r!=0){
+                return ApplyVectorOperation(l,r,[](double a, double b){return a / b;});
             }
             else{
-                std::cout << "Vectors of different length detected: " << l.size() << " and " << r.size() << std::endl;
-                throw std::runtime_error("Calculation error");
+            std::cout << "Zero Division";
+            throw std::runtime_error("Calculation error");
             }
-            return result;
         }
-        else if (Operator == '*')
-            return (left->evaluate()).toDouble() * (right->evaluate()).toDouble();
     }
     ~OperatorNode() {
         delete left;
@@ -87,7 +82,8 @@ class ConstantNode : public ASTN
 public:
     ConstantNode(double value):value(value){ }
     QVariant evaluate(){
-        return QList<QVariant>(value);
+        //qInfo() << value;
+        return QList<QVariant>({QVariant(value)});
     }
 private:
     double value;
@@ -97,19 +93,21 @@ private:
 class ArgumentsNode : public ASTN
 {
 public:
-    ArgumentsNode(const ASTNPtr& a, const  ASTNPtr& b): a(a), b(b){}
+    ArgumentsNode(ASTNPtr& a, ASTNPtr& b): a(a), b(b){}
     QVariant evaluate(){
-        return a->evaluate();
+        QVariant av = a->evaluate(), bv = b->evaluate();
+        return QList<QVariant>({av}) + bv.toList();
     }
 private:
-    ASTN * a;
-    ASTN * b;
+    ASTNPtr a,b;
 };
+
+
 
 class AssignmentNode : public ASTN
 {
 public:
-    AssignmentNode(std::string identifier, const ASTNPtr & value): value(value), identifier(identifier){}
+    AssignmentNode(std::string identifier, const ASTNPtr & value): identifier(identifier), value(value){}
     QVariant evaluate(){
         QList<QVariant> val = (value->evaluate()).toList();
         variable_map[identifier] = val;
@@ -124,6 +122,7 @@ class FunctionNode : public ASTN
 {
 public:
     FunctionNode(std::string identifier, const ASTNPtr & values) : identifier(identifier), values(values){}
+
     QVariant evaluate(){
         auto vs = values->evaluate().toList();
         if (identifier == "one")
@@ -136,8 +135,8 @@ public:
             double ret = vs[0].toDouble();
             for (auto & v: vs){
                 ret = std::min(v.toDouble(),ret);
-                return ret;
             }
+            return ret;
         }
 
         std::cout << "Unknown function: " << std::quoted(identifier) << std::endl;
@@ -169,7 +168,81 @@ private:
 };
 
 
-#endif // PARSER_H
-*/
+std::map<std::string, QVariant> variable_map;
 
+namespace phx = boost::phoenix;
 
+class ArithmeticGrammar1 : public qi::grammar<std::string::const_iterator, ASTNPtr (), qi::space_type>
+{
+public:
+    using Iterator = std::string::const_iterator;
+
+    ArithmeticGrammar1() : ArithmeticGrammar1::base_type(start)
+    {
+        varname %= qi::alpha >> *qi::alnum;
+        start = (varname >> '=' >> term)
+                [qi::_val = phx::new_<AssignmentNode>(qi::_1,qi::_2)] |
+                term [qi::_val = qi::_1];
+
+        term = (product >> '+' >> term)
+                [qi::_val = phx::new_<OperatorNode<'+'>>(qi::_1, qi::_2)] |
+                product [qi::_val = qi::_1];
+
+        product = (factor >> '*' >> term)
+                [qi::_val = phx::new_<OperatorNode<'*'>>(qi::_1, qi::_2)] |
+                factor [qi::_val = qi::_1];
+
+        factor = group [qi::_val = qi::_1] |
+                function [qi::_val = qi::_1] |
+                variable [qi::_val = qi::_1] |
+                constant [qi::_val = qi::_1];
+
+        function = (varname >> '(' >> args >> ')')[qi::_val = phx::new_<FunctionNode>(qi::_1,qi::_2)];
+        args = (term >> ',' >> args)[qi::_val = phx::new_<ArgumentsNode>(qi::_1, qi::_2)]; // |;
+                //term [qi::_val = phx::new_<ArgumentsNode>(qi::_1)];
+
+        constant = qi::double_ [qi::_val = phx::new_<ConstantNode>(qi::_1)];
+        variable = varname [qi::_val = phx::new_<VariableNode>(qi::_1)];
+        group %= '(' >> term >> ')';
+    }
+
+    qi::rule<Iterator, std::string(), qi::space_type> varname;
+    qi::rule<Iterator, ASTNPtr(), qi::space_type> start, term, group, product, factor;
+    qi::rule<Iterator, ASTNPtr(), qi::space_type> constant, variable;
+    qi::rule<Iterator, ASTNPtr(), qi::space_type> function, args;
+};
+
+QVariant ApplyVectorOperation(QList<QVariant> & l, QList<QVariant> & r, double (*f)(double, double)){
+    QList<QVariant> result;
+    if (l.size() == 1){
+        for (QVariant & elem : r){
+            result.append(f(l[0].toDouble(), elem.toDouble()));
+        }
+    }
+    else if (r.size() == 1){
+            for (QVariant & elem : l){
+                result.append(f(elem.toDouble(), r[0].toDouble()));
+            }
+    }
+    else if (l.size() == r.size()){
+        for (int i = 0; i < r.size(); ++i){
+            result.append(f(l[i].toDouble(), r[i].toDouble()));
+        }
+    }
+    else{
+        std::cout << "Vectors of different length detected: " << l.size() << " and " << r.size() << std::endl;
+        throw std::runtime_error("Calculation error");
+    }
+    return result;
+}
+
+void test1(QString input) {
+    try {
+        ASTNPtr out_node;
+        ParseOrDie(input.toStdString(), ArithmeticGrammar1(), qi::space, out_node);
+        qInfo() << "evaluate() = " << out_node->evaluate();
+        delete out_node;
+    } catch (std::exception& e){
+        qInfo() << "EXCEPTION: " << e.what();
+    }
+}
