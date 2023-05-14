@@ -150,7 +150,7 @@ win32-msvc*:contains(ARCHITECTURE, x64) {
 
 
 SOURCES += \
-    Parser.cpp \
+    imp_out.cpp \
     main.cpp \
     mainwindow.cpp \
     manager.cpp \
@@ -165,6 +165,7 @@ SOURCES += \
 HEADERS += \
     Grammar.h \
     Parser.h \
+    imp_out.h \
     mainwindow.h \
     manager.h \
     plots/plot.h \

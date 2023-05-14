@@ -40,6 +40,34 @@ public:
 using ASTN = AbstractSyntaxTreeNode;
 using ASTNPtr = AbstractSyntaxTreeNode *;
 
+QVariant ApplyVectorOperation(QList<QVariant> & l, QList<QVariant> & r, double (*f)(double, double)){
+    QList<QVariant> result;
+    if (l.size() == 1){
+        for (QVariant & elem : r){
+            result.append(f(l[0].toDouble(), elem.toDouble()));
+        }
+    }
+    else if (r.size() == 1){
+            for (QVariant & elem : l){
+                result.append(f(elem.toDouble(), r[0].toDouble()));
+            }
+    }
+    else if (l.size() == r.size()){
+        for (int i = 0; i < r.size(); ++i){
+            result.append(f(l[i].toDouble(), r[i].toDouble()));
+        }
+    }
+    else{
+        std::cout << "Vectors of different length detected: " << l.size() << " and " << r.size() << std::endl;
+        throw std::runtime_error("Calculation error");
+    }
+    return result;
+}
+
+
+
+
+
 
 template<char Operator>
 class OperatorNode : public ASTN
@@ -47,33 +75,23 @@ class OperatorNode : public ASTN
 public:
     OperatorNode(const ASTNPtr& left, const ASTNPtr& right) : left(left), right(right){ }
     QVariant evaluate(){
-        if (Operator == '+'){
-            QList<QVariant> l = left->evaluate().toList();
-            QList<QVariant> r = right->evaluate().toList();
-            QList<QVariant> result;
-            if (l.size() == 1){
-                for (QVariant & elem : r){
-                    result.append(l[0].toDouble() + elem.toDouble());
-                }
-            }
-            else if (r.size() == 1){
-                    for (QVariant & elem : l){
-                        result.append(elem.toDouble() + r[0].toDouble());
-                    }
-            }
-            else if (l.size() == r.size()){
-                for (int i = 0; i < r.size(); ++i){
-                    result.append(l[i].toDouble() + r[i].toDouble());
-                }
+        QList<QVariant> l = left->evaluate().toList();
+        QList<QVariant> r = right->evaluate().toList();
+        if (Operator == '+')
+            return ApplyVectorOperation(l,r,[](double a, double b){return a + b;});
+        else if (Operator == '-')
+            return ApplyVectorOperation(l,r,[](double a, double b){return a - b;});
+        else if (Operator == '*')
+            return ApplyVectorOperation(l,r,[](double a, double b){return a * b;});
+        else if (Operator == '/'){
+            if (r!=0){
+                return ApplyVectorOperation(l,r,[](double a, double b){return a / b;});
             }
             else{
-                std::cout << "Vectors of different length detected: " << l.size() << " and " << r.size() << std::endl;
-                throw std::runtime_error("Calculation error");
+            std::cout << "Zero Division";
+            throw std::runtime_error("Calculation error");
             }
-            return result;
         }
-        else if (Operator == '*')
-            return (left->evaluate()).toDouble() * (right->evaluate()).toDouble();
     }
     ~OperatorNode() {
         delete left;
@@ -89,6 +107,7 @@ class ConstantNode : public ASTN
 public:
     ConstantNode(double value):value(value){ }
     QVariant evaluate(){
+        //qInfo() << value;
         return value;
     }
 private:
@@ -113,7 +132,7 @@ private:
 class AssignmentNode : public ASTN
 {
 public:
-    AssignmentNode(std::string identifier, const ASTNPtr & value): value(value), identifier(identifier){}
+    AssignmentNode(std::string identifier, const ASTNPtr & value): identifier(identifier), value(value){}
     QVariant evaluate(){
         QList<QVariant> val = (value->evaluate()).toList();
         variable_map[identifier] = val;
@@ -141,8 +160,8 @@ public:
             double ret = vs[0].toDouble();
             for (auto & v: vs){
                 ret = std::min(v.toDouble(),ret);
-                return ret;
             }
+            return ret;
         }
 
         std::cout << "Unknown function: " << std::quoted(identifier) << std::endl;

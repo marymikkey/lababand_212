@@ -12,16 +12,20 @@ class Manager {
         void addVariable(const VariableData &);
         void deleteVariable(int);
         void addMeasurementRow(std::initializer_list<VariableData> list);
-        void removeMeasurementRow(int begin, int amount);
+        void addMeasurementRow(QList<double> data);
+        void removeMeasurementRow(int row);
         void clearCalculated();
-        void addCalculated(VariableData &);
-        int GetVariableSize() const {return measurements.size();};
+        void addCalculated(VariableData & var);
+        inline int getVariablesSize() const {return variables.size();};
+        inline int getMeasurementAmount() const {return measurement_count;}
         void clear();
+        void recalcMeasurementAmount();
+        int getCalculatedSize();
         static Manager* instance();
 
         Plot *plot;
 
-        QList<VariableData> measurements;
+        QList<VariableData> variables;
         QList<VariableData> calculated;
         int measurement_count = 0;
 };
