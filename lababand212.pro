@@ -19,7 +19,10 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     manager.cpp \
-    plots/plot_scatter.cpp \
+    plots/plot2d.cpp \
+    plots/plotChoice.cpp \
+    plots/plotHist.cpp \
+    plots/plotScatter.cpp \
     qcpdocumentobject.cpp \
     qcustomplot.cpp
 
@@ -27,7 +30,10 @@ HEADERS += \
     mainwindow.h \
     manager.h \
     plots/plot.h \
-    plots/plot_scatter.h \
+    plots/plot2d.h \
+    plots/plotChoice.h \
+    plots/plotHist.h \
+    plots/plotScatter.h \
     qcpdocumentobject.h \
     qcustomplot.h
 

@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "manager.h"
-#include "plots/plot_scatter.h"
+#include "plots/plot2d.h"
+#include "plots/plotScatter.h"
 #include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -14,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     Manager::instance()->plot->draw(ui->plot);
 
     connect(ui->actionReplot, SIGNAL(triggered()), this, SLOT(draw()));
+    connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(plotOptions()));
 }
 
 
@@ -27,3 +29,7 @@ void MainWindow::draw()
     Manager::instance()->plot->draw(ui->plot);
 }
 
+void MainWindow::plotOptions()
+{
+    Manager::instance()->plot->options();
+}

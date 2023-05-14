@@ -12,7 +12,7 @@ public:
     ~Plot() = default;
 
     virtual void draw(QCustomPlot *plot) = 0;
-    //virtual void options() = 0;
+    virtual void options() = 0;
 };
 
 #endif // PLOT_H
