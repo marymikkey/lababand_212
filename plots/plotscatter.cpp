@@ -1,4 +1,4 @@
-#include "plot_scatter.h"
+#include "plotscatter.h"
 
 void PlotScatter::draw(QCustomPlot *plot)
 {

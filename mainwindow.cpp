@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "manager.h"
-#include "plots/plot_scatter.h"
+#include "plots/plotscatter.h"
 #include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)

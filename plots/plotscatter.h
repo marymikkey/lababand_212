@@ -1,12 +1,13 @@
-#ifndef PLOT_SCATTER_H
-#define PLOT_SCATTER_H
+#ifndef PLOTSCATTER_H
+#define PLOTSCATTER_H
 
 #include "plot.h"
 
-class PlotScatterOptionsDialog : public QDialog
+class PlotScatterDialog : public QDialog
 {
     Q_OBJECT
 public:
+    explicit PlotScatterDialog(QString xLabel, QString yLabel, QString title, QWidget *parent = nullptr);
     QLineEdit xlabel, ylabel, title;
 };
 
@@ -18,6 +19,7 @@ public:
    ~PlotScatter() {};
 
     void draw(QCustomPlot *plot) override;
+private:
     QString xlabel = "Measurement count", ylabel = "Measurement value", title = "";
 };
-#endif // PLOT_SCATTER_H
+#endif // PLOTSCATTER_H

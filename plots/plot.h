@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "qcustomplot.h"
+//#include "variabledata.h"
 
 class Plot : public  QWidget
 {
