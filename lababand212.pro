@@ -160,6 +160,7 @@ SOURCES += \
     variable_data.cpp
 
 HEADERS += \
+    Grammar.h \
     Parser.h \
     mainwindow.h \
     manager.h \

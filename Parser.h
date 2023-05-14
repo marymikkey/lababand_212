@@ -1,4 +1,4 @@
-/*#ifndef PARSER_H
+#ifndef PARSER_H
 #define PARSER_H
 #include <iomanip>
 #include <iostream>
@@ -85,7 +85,7 @@ class ConstantNode : public ASTN
 public:
     ConstantNode(double value):value(value){ }
     QVariant evaluate(){
-        return QList<QVariant>(value);
+        return value;
     }
 private:
     double value;
@@ -168,4 +168,3 @@ private:
 
 
 #endif // PARSER_H
-*/
