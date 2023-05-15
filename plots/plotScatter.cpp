@@ -1,11 +1,9 @@
 #include "plotScatter.h"
 
-
 void PlotScatter::draw(QCustomPlot *plot)
 {
     plot->clearGraphs();
-    plot->legend->setVisible(false);
-
+    plot->legend->clear();
 
     for (int i = 0; i < 3; ++i)
     {
@@ -14,36 +12,27 @@ void PlotScatter::draw(QCustomPlot *plot)
         QPen pen;
         pen.setColor(QColor(i*100, i*100, i*100));
         pen.setStyle(Qt::DashDotLine);
-        pen.setWidth(8);
+        pen.setWidth(3);
         graph->setPen(pen);
         graph->setScatterStyle(QCPScatterStyle::ssDot);
-        graph->setLineStyle(QCPGraph::lsNone);
         graph->setName(QString::number(i));
 
-        QCPErrorBars *errorBarsX = new QCPErrorBars(plot->xAxis, plot->yAxis);
-        QCPErrorBars *errorBarsY = new QCPErrorBars(plot->yAxis, plot->xAxis);
+        QCPErrorBars *errorBars = new QCPErrorBars(plot->xAxis, plot->yAxis);
 
-        errorBarsX->removeFromLegend();
-        errorBarsY->removeFromLegend();
-        errorBarsX->setDataPlottable(graph);
-        errorBarsY->setDataPlottable(graph);
+        errorBars->removeFromLegend();
+        errorBars->setDataPlottable(graph);
 
+        QVector<double> x, y, e;
 
-        QVector<double> x, y, ex, ey;
-
-        for (int j=0; j<5; ++j)
+        for (int j=0; j<101; ++j)
         {
-            x.append(j - 2);
-            y.append(i + x[j]*x[j]);
-            ex.append(0.0005*x[j]);
-            ey.append(0.02*y[j]);
+            x.append(j/50.0 -1);
+            y.append(0.2 * i + x[j]*x[j]);
+            e.append(0.05*y[j]);
         }
         graph->setData(x,y);
-
-        errorBarsX->setData(ex);
-        errorBarsY->setData(ey);
+        errorBars->setData(e);
     }
-
     if (plot->plotLayout()->children().size() <= 1)
     {
         plot->plotLayout()->insertRow(0);
@@ -60,9 +49,10 @@ void PlotScatter::draw(QCustomPlot *plot)
     plot->replot();
 }
 
+
 void PlotScatter::options()
 {
-    PlotScatterDialog optionDialog {xlabel, ylabel, title, this};
+    PlotScatterDialog optionDialog{xlabel, ylabel, title, this};
     optionDialog.show();
     optionDialog.exec();
     xlabel = optionDialog.xlabel.text();
@@ -89,3 +79,5 @@ PlotScatterDialog::PlotScatterDialog(QString xLabel, QString yLabel, QString tit
 
     setLayout(mainlayout);
 }
+
+
