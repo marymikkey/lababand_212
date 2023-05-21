@@ -3,6 +3,7 @@
 #include "manager.h"
 #include "plots/plot2d.h"
 #include "plots/plotScatter.h"
+#include "plots/plotHist.h"
 #include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -11,13 +12,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    Manager::instance()->plot = new PlotScatter;
+    Manager::instance()->plot = new PlotHist;
     Manager::instance()->plot->draw(ui->plot);
 
     connect(ui->actionReplot, SIGNAL(triggered()), this, SLOT(draw()));
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(plotOptions()));
 }
-
 
 MainWindow::~MainWindow()
 {

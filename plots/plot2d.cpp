@@ -3,7 +3,8 @@
 void Plot2d::draw(QCustomPlot *plot)
 {
     plot->clearGraphs();
-    plot->legend->clear();
+    plot->legend->setVisible(false);
+
 
     for (int i = 0; i < 3; ++i)
     {
@@ -12,27 +13,36 @@ void Plot2d::draw(QCustomPlot *plot)
         QPen pen;
         pen.setColor(QColor(i*100, i*100, i*100));
         pen.setStyle(Qt::DashDotLine);
-        pen.setWidth(3);
+        pen.setWidth(8);
         graph->setPen(pen);
         graph->setScatterStyle(QCPScatterStyle::ssDot);
+        graph->setLineStyle(QCPGraph::lsNone);
         graph->setName(QString::number(i));
 
-        QCPErrorBars *errorBars = new QCPErrorBars(plot->xAxis, plot->yAxis);
+        QCPErrorBars *errorBarsX = new QCPErrorBars(plot->xAxis, plot->yAxis);
+        QCPErrorBars *errorBarsY = new QCPErrorBars(plot->yAxis, plot->xAxis);
 
-        errorBars->removeFromLegend();
-        errorBars->setDataPlottable(graph);
+        errorBarsX->removeFromLegend();
+        errorBarsY->removeFromLegend();
+        errorBarsX->setDataPlottable(graph);
+        errorBarsY->setDataPlottable(graph);
 
-        QVector<double> x, y, e;
 
-        for (int j=0; j<101; ++j)
+        QVector<double> x, y, ex, ey;
+
+        for (int j=0; j<5; ++j)
         {
-            x.append(j/50.0 -1);
-            y.append(0.2 * i + x[j]*x[j]);
-            e.append(0.05*y[j]);
+            x.append(j - 2);
+            y.append(i + x[j]*x[j]);
+            ex.append(0.0005*x[j]);
+            ey.append(0.02*y[j]);
         }
         graph->setData(x,y);
-        errorBars->setData(e);
+
+        errorBarsX->setData(ex);
+        errorBarsY->setData(ey);
     }
+
     if (plot->plotLayout()->children().size() <= 1)
     {
         plot->plotLayout()->insertRow(0);
@@ -49,10 +59,9 @@ void Plot2d::draw(QCustomPlot *plot)
     plot->replot();
 }
 
-
 void Plot2d::options()
 {
-    Plot2dDialog optionDialog{xlabel, ylabel, title, this};
+    Plot2dDialog optionDialog {xlabel, ylabel, title, this};
     optionDialog.show();
     optionDialog.exec();
     xlabel = optionDialog.xlabel.text();
