@@ -1,6 +1,13 @@
 #ifndef VARIABLEDATA_H
 #define VARIABLEDATA_H
 
+#include <QFile>
+#include <QDebug>
+#include <QDataStream>
+#include <QTextStream>
+#include <QApplication>
+#include <QIODevice>
+#include <stdexcept>
 #include <QList>
 #include <QString>
 #include <utility>

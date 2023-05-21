@@ -1,0 +1,12 @@
+release/imp_out.o
+release/main.o
+release/mainwindow.o
+release/manager.o
+release/plot2d.o
+release/plotchoice.o
+release/plothist.o
+release/plotscatter.o
+release/qcpdocumentobject.o
+release/qcustomplot.o
+release/variable_data.o
+release/moc_mainwindow.o

@@ -3,7 +3,21 @@
 #include<QTranslator>
 #include <QApplication>
 #include "Parser.h"
-#include "Grammar.h"
+
+
+std::map<std::string, QVariant> variable_map;
+
+
+void test1(QString input){
+    try {
+        ASTNPtr out_node;
+        ParseOrDie(input.toStdString(), ArithmeticGrammar1(), qi::space, out_node);
+        qInfo() << "evaluate() = " << out_node->evaluate();
+        delete out_node;
+    } catch (std::exception& e){
+        qInfo() << "EXCEPTION: " << e.what();
+    }
+}
 
 
 int main(int argc, char *argv[])
@@ -26,9 +40,10 @@ int main(int argc, char *argv[])
 
     variable_map["x"] = QList<QVariant>({11,22});
 
-    //test1("y = 22 + 44*x * square(3333) + min(1,-1,-3333) + one() + sqrt(225, 1, 2)");
-    test1("y = 22*x + 44");
+    test1("d = 22 + 44*x * square(3333) + min(1,-1,-3333) + one() + sqrt(225, 1, 2)");
+    test1("y = 22*x");
     test1("z = x + x");
+    test1("w = 11 + 10");
     qInfo() << Qt::endl << "dkdkd" << Qt::endl;
     qInfo() << variable_map["x"];
     qInfo() << variable_map["y"];
@@ -40,3 +55,8 @@ int main(int argc, char *argv[])
     return a.exec();
 }
 
+//заменить qvariant на структуры с 2мя полями value и error (можно еще собс операторы сложения умножения величин с ошибкой)
+
+//1: переписывать variable node и assignment node таким образом, чтобы они работали с менеджером
+//2: чтобы в test1 до парсера зачистить variable map от того что там было, захерачить туда данные из менеджера и затем после парса залить все обратно
+//3 оператор индексации, динамическая подгр

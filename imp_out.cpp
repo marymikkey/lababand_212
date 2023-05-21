@@ -1,7 +1,4 @@
-#include <QFile>
-#include <QDebug>
-#include <QDataStream>
-#include <QTextStream>
+
 #include "imp_out.h"
 
 void ImpOut_CSV::save(const QString& output){

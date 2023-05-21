@@ -1,6 +1,6 @@
 #include "Manager.h"
-#include <QGlobalStatic>
-#include "Manager.h"
+
+
 
 Q_GLOBAL_STATIC(Manager, GlobalManager)
 
@@ -43,8 +43,6 @@ void Manager::addMeasurementRow(QList<double> data){
 int Manager::getCalculatedSize(){
     return calculated.size();
 }
-
-
 
 void Manager::removeMeasurementRow(int row){
     if (row < 0 || row >= measurement_count)
