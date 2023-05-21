@@ -99,6 +99,55 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="naming_tab">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <attribute name="title">
+         <string>naming</string>
+        </attribute>
+        <widget class="QTableView" name="naming_tableView">
+         <property name="geometry">
+          <rect>
+           <x>11</x>
+           <y>11</y>
+           <width>608</width>
+           <height>525</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="errors_tab">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>-1</number>
+        </property>
+        <property name="accessibleName">
+         <string/>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+</string>
+        </property>
+        <attribute name="title">
+         <string>errors</string>
+        </attribute>
+        <widget class="QTableView" name="errors_tableView">
+         <property name="geometry">
+          <rect>
+           <x>11</x>
+           <y>11</y>
+           <width>608</width>
+           <height>525</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
        <widget class="QWidget" name="formulas_tab">
         <attribute name="title">
          <string>formulas</string>
@@ -168,7 +217,7 @@
      <x>0</x>
      <y>0</y>
      <width>964</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMenu">

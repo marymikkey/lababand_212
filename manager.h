@@ -16,11 +16,25 @@ class Manager {
         void removeMeasurementRow(int row);
         void clearCalculated();
         void addCalculated(VariableData & var);
+        int getVarCalcAmount();
+        VariableData* getVariable(const QString& shortName);
+        VariableData* getVariable(int index);
         inline int getVariablesSize() const {return variables.size();};
         inline int getMeasurementAmount() const {return measurement_count;}
         void clear();
+        VariableData* getCalculated(const QString& shortName);
+        VariableData* getCalculated(int index);
         void recalcMeasurementAmount();
         int getCalculatedSize();
+        VariableData* getChoiceVarCalc(int index);
+        VariableData* getChoiceVarCalc(const QString& name);
+        void removeMeasurement();
+        int getVariableSize() const;
+        int getMeasurementCount() const;
+        void addMeasurement();
+        VariableData* getVariable(QString, bool);
+
+
         static Manager* instance();
 
         Plot *plot;

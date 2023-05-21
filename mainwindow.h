@@ -19,8 +19,13 @@ private slots:
 
     void draw();
     void plotOptions();
+    void addVariable();
+    void addRow();
+    void save();
+    void load();
 
 private:
     Ui::MainWindow *ui;
+    void createUI(const QStringList &headers);
 };
 #endif // MAINWINDOW_H

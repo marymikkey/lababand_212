@@ -1,0 +1,12 @@
+debug/imp_out.o
+debug/main.o
+debug/mainwindow.o
+debug/manager.o
+debug/plot2d.o
+debug/plotchoice.o
+debug/plothist.o
+debug/plotscatter.o
+debug/qcpdocumentobject.o
+debug/qcustomplot.o
+debug/variable_data.o
+debug/moc_mainwindow.o
