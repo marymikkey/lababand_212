@@ -1,13 +1,7 @@
 #ifndef VARIABLEDATA_H
 #define VARIABLEDATA_H
 
-#include <QFile>
-#include <QDebug>
-#include <QDataStream>
-#include <QTextStream>
-#include <QApplication>
-#include <QIODevice>
-#include <stdexcept>
+#include <QMap>
 #include <QList>
 #include <QString>
 #include <utility>
@@ -21,20 +15,7 @@ public:
     QList<double> calcErrors;
     QString fullNaming;
     QString shortNaming;
-
-    struct Instrument
-    {
-        enum ErrorType
-        {
-            relative,
-            absolute,
-            calculated
-        } type = ErrorType::absolute;
-        double value = 0.1;
-
-        static QMap<VariableData::Instrument::ErrorType, QString> error_types;
-        static constexpr int FILEDS = 2;
-    } instrumentError;
+    QList <double> values;
 
     struct VisualOptions
     {
@@ -42,19 +23,43 @@ public:
         int width = 1;
         Qt::PenStyle line_type = Qt::SolidLine;
         QCPScatterStyle::ScatterShape point_type = QCPScatterStyle::ScatterShape::ssNone;
-        QColor color = "black";
+        QColor color = "red";
 
         static QMap<Qt::PenStyle, QString> line_types;
         static QMap<QCPScatterStyle::ScatterShape, QString> point_types;
 
-        static constexpr int FILEDS = 5;
+        static constexpr int FIELDS = 5;
     } visual;
 
-    double error(int index = 0);
+    struct Naming
+    {
+        QString full;
+        QString alias;
+        static constexpr int FIELDS = 2;
+    }naming;
+
+    struct Error
+    {
+        enum Type
+        {
+            Absolute,
+            Relative,
+            CalculatedValue,
+        } type = Type::Absolute;
+        double value = 0.1;
+        static QMap<VariableData::Error::Type, QString> error_types; //static QMap<Type, QString> error_types;
+        static constexpr int FIELDS = 2;
+
+    }error;
+
+    double ierror(int index = 0);
     int getMeasurementsCount();
     VariableData(QString fullNaming, QString shortNaming = "",
                  QList<double> measurements = QList<double> {}, QList<double> calcErrors = QList<double> {});
+    VariableData();
     VariableData(int size);
+    double getError(int measurement) const;
+
 };
 
 #endif // VARIABLEDATA_H

@@ -12,35 +12,19 @@ QMap<QCPScatterStyle::ScatterShape, QString> VariableData::VisualOptions::point_
     {QCPScatterStyle::ScatterShape::ssCircle, "Circle"},
 };
 
-QMap<VariableData::Instrument::ErrorType, QString> VariableData::Instrument::error_types = {
-    {VariableData::Instrument::ErrorType::relative, "Relative"},
-    {VariableData::Instrument::ErrorType::absolute, "Absolute"},
-    {VariableData::Instrument::ErrorType::calculated, "Calculated"},
+QMap<VariableData::Error::Type, QString> VariableData::Error::error_types = {
+    {VariableData::Error::Type::Relative, "Relative"},
+    {VariableData::Error::Type::Absolute, "Absolute"},
+    {VariableData::Error::Type::CalculatedValue, "Calculated"},
 };
-
-double VariableData::error(int index)
-{
-  switch(int(VariableData::instrumentError.type))
-  {
-    case Instrument::ErrorType::relative:
-      return VariableData::instrumentError.value * VariableData::measurements.at(index);
-    case Instrument::ErrorType::absolute:
-      return VariableData::instrumentError.value;
-    case Instrument::ErrorType::calculated:
-        //return calcErrors.at(index);
-      return VariableData::instrumentError.value; // ?
-    default:
-      throw "Wrong ErrorType!";
-  }
-}
 
 int VariableData::getMeasurementsCount() {return measurements.size();}
 
 VariableData::VariableData(QString shortNaming, QString fullNaming, QList<double> meas, QList<double> calcErrors)
-    : measurements { meas }, fullNaming { fullNaming }, shortNaming { shortNaming }, calcErrors{ calcErrors }
+    :   measurements { meas }, calcErrors{ calcErrors },  fullNaming { fullNaming },  shortNaming { shortNaming }
 {
     if (!calcErrors.empty())
-        instrumentError.type = Instrument::ErrorType::calculated;
+        error.type = Error::Type::CalculatedValue;
 }
 
 VariableData::VariableData(int size)
@@ -50,4 +34,26 @@ VariableData::VariableData(int size)
     QVariant t = QVariant(rand() % 10);
     shortNaming = t.toString();
     fullNaming = QString("New") + t.toString();
+}
+VariableData::VariableData()
+{
+    QString alias;
+    auto generator = QRandomGenerator::global();
+    for (int i = 0; i < 5; ++i)
+        alias.append(QChar('a'+(generator->generate()% 26)));
+
+    naming.alias = alias;
+    naming.full = QString("Variable ") + alias.toUpper();
+}
+double VariableData::getError(int measurement) const
+{
+    switch(error.type)
+    {
+        case Error::Type::Absolute:
+            return error.value;
+        case Error::Type::Relative:
+            return error.value * values[measurement];
+        case Error::Type::CalculatedValue:
+            throw "Calculated variables not yet implemented";
+    }
 }
