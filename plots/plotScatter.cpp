@@ -1,34 +1,36 @@
 #include "plotScatter.h"
+#include "manager.h"
 
 void PlotScatter::draw(QCustomPlot *plot)
 {
+    auto m = Manager::instance();
+
     plot->clearGraphs();
     plot->legend->clear();
-
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < m->getVarCalcAmount(); ++i)
     {
-
+        auto* v = m->getChoiceVarCalc(i);
+        if (!v->visual.visible) continue;
         auto graph = plot->addGraph();
         QPen pen;
-        pen.setColor(QColor(i*100, i*100, i*100));
+        pen.setColor(v->visual.color);
         pen.setStyle(Qt::DashDotLine);
-        pen.setWidth(3);
+        pen.setWidth(v->visual.width);
         graph->setPen(pen);
-        graph->setScatterStyle(QCPScatterStyle::ssDot);
-        graph->setName(QString::number(i));
+//        graph->setScatterStyle(v->visual.point_type);
+        graph->setName(v->fullNaming);
 
         QCPErrorBars *errorBars = new QCPErrorBars(plot->xAxis, plot->yAxis);
-
         errorBars->removeFromLegend();
         errorBars->setDataPlottable(graph);
 
-        QVector<double> x, y, e;
+        QVector<double> x,y,e;
 
-        for (int j=0; j<101; ++j)
+        for (int j = 0; j < v->getMeasurementsCount(); ++j)
         {
-            x.append(j/50.0 -1);
-            y.append(0.2 * i + x[j]*x[j]);
-            e.append(0.05*y[j]);
+            x.append(j);
+            y.append(v->measurements[j]);
+            e.append(v->getError(j));
         }
         graph->setData(x,y);
         errorBars->setData(e);
@@ -38,17 +40,15 @@ void PlotScatter::draw(QCustomPlot *plot)
         plot->plotLayout()->insertRow(0);
         plot->plotLayout()->addElement(0, 0, new QCPTextElement(plot, title));
     }
-
-    static_cast<QCPTextElement* >(plot->plotLayout()->element(0, 0))->setText(title);
+    static_cast<QCPTextElement* >(plot->plotLayout()->element(0,0))->setText(title);
     plot->xAxis->setLabel(xlabel);
     plot->yAxis->setLabel(ylabel);
     plot->legend->setVisible(true);
-    plot->legend->setBrush(QColor(255, 255, 0, 100));
+    plot->legend->setBrush(QColor(255, 255, 255, 150));
     plot->rescaleAxes();
     plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
     plot->replot();
 }
-
 
 void PlotScatter::options()
 {
@@ -65,8 +65,8 @@ PlotScatterDialog::PlotScatterDialog(QString xLabel, QString yLabel, QString tit
 {
     QVBoxLayout *mainlayout = new QVBoxLayout;
 
-    QLabel *titleWidget = new QLabel(tr("Plot title: "));
-    mainlayout->addWidget(titleWidget);
+    QLabel *titleLable = new QLabel(tr("Plot title: "));
+    mainlayout->addWidget(titleLable);
     mainlayout->addWidget(&this->title);
 
     QLabel *xLabelWidget = new QLabel(tr("X axis label: "));
@@ -79,5 +79,4 @@ PlotScatterDialog::PlotScatterDialog(QString xLabel, QString yLabel, QString tit
 
     setLayout(mainlayout);
 }
-
 

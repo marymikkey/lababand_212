@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     //test1("y = 22 + 44*x * square(3333) + min(1,-1,-3333) + one() + sqrt(225, 1, 2)");
     test1("y = 22*x + 44");
     test1("z = x + x");
-    qInfo() << Qt::endl << "dkdkd" << Qt::endl;
+//    qInfo() << Qt::endl << "dkdkd" << Qt;
     qInfo() << variable_map["x"];
     qInfo() << variable_map["y"];
     qInfo() << variable_map["z"];
@@ -39,4 +39,3 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-

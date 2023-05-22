@@ -3,25 +3,25 @@
 
 #include "plot.h"
 
-class Plot2dDialog : public QDialog
+class Plot2dOptionsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit Plot2dDialog(QString xlabel, QString ylabel, QString title, QWidget *parent = nullptr);
-    QLineEdit xlabel, ylabel, title;
-
+    explicit Plot2dOptionsDialog(QString xlabel, QString ylabel, QString title, QWidget *parent = nullptr);
+    QLineEdit title;
+    QComboBox xLabel, yLabel;
 };
 
 class Plot2d : public Plot
 {
     Q_OBJECT
 public:
-    Plot2d(QWidget *parent = nullptr) : Plot(parent) {};
+    Plot2d(QString xlabel, QString ylabel, QWidget *parent = nullptr);;
     ~Plot2d() {};
 
     void draw(QCustomPlot *plot) override;
     void options() override;
-    QString xlabel, ylabel, title = "";
+    QString xLabel, yLabel, title = "";
 };
 
 #endif // PLOT2D_H

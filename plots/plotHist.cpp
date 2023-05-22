@@ -1,57 +1,56 @@
 #include "plotHist.h"
-#include <iostream>
+#include "manager.h"
 
 void PlotHist::draw(QCustomPlot *plot)
 {
+    auto m = Manager::instance();
+
     plot->clearGraphs();
     plot->legend->clear();
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < m->getVarCalcAmount(); ++i)
     {
+        auto* v = m->getChoiceVarCalc(i);
+        if (!v->visual.visible) continue;
         auto graph = plot->addGraph();
         QPen pen;
-        pen.setColor(QColor(i*100, i*100, i*100));
-        pen.setStyle(Qt::DashDotLine);
-        pen.setWidth(3);
+        pen.setColor(v->visual.color);
+        pen.setStyle(v->visual.line_type);
+        pen.setWidth(v->visual.width);
         graph->setPen(pen);
+        graph->setName(v->fullNaming);
         graph->setLineStyle(QCPGraph::LineStyle::lsStepCenter);
 
-        graph->setName(QString::number(i));
 
-        QVector<double> x, y;
-        for (int j=0; j<101; ++j)
+        double min = v->measurements[0], max = v->measurements[0];
+        for (double k : v->measurements)
         {
-            x.append(j/50.0 -1);
-            y.append(i + x[j]*x[j]);
+            min = std::min(k, min);
+            max = std::max(k, max);
         }
 
-        double min = y[0], max = y[0];
-        for (double _y : y)
-        {
-            min = std::min(_y, min);
-            max = std::max(_y, max);
-        }
+        double step = (max - min) / bins;
 
-        int histArray [bins];
-        for (int j=0; j<bins; j++)
-        {
-            histArray[j] = 0;
-        }
+        QVector<double> x,y;
+        x.append(min - step/2);
+        y.append(0);
 
-        int _bin = 0;
-        for (int j=0; j<101; ++j)
+        for (int j = 0; j < bins; ++j)
         {
-            _bin = (int)floor((y[j] - min) / ((max - min) / bins));
-            histArray[_bin]++;
-        }
+            double x0 = min + j * step, x1 = min + (j + 1) * step;
+            if ( j == bins - 1) x1 += 1e-15;
+            int count = 0;
 
-        QVector<double> elem_amount, bin_num;
-        for (int j=0; j<bins; j++)
-        {
-            elem_amount.append(histArray[j]);
-            bin_num.append(j+i+3);
-        }
+            for (double k : v->measurements)
+            {
+                if (x0 <= k && k < x1) count ++;
+            }
 
-        graph->setData(elem_amount, bin_num);
+            x.append((x0+x1)/2);
+            y.append(count);
+        }
+        x.append(max + step/2);
+        y.append(0);
+        graph->setData(x,y);
     }
     if (plot->plotLayout()->children().size() <= 1)
     {
@@ -62,7 +61,7 @@ void PlotHist::draw(QCustomPlot *plot)
     plot->xAxis->setLabel(xlabel);
     plot->yAxis->setLabel(ylabel);
     plot->legend->setVisible(true);
-    plot->legend->setBrush(QColor(255, 255, 0, 100));
+    plot->legend->setBrush(QColor(255, 255, 255, 150));
     plot->rescaleAxes();
     plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
     plot->replot();
@@ -79,25 +78,25 @@ void PlotHist::options()
     bins = optionDialog.bins.value();
 }
 
-PlotHistDialog::PlotHistDialog(QString xlabel, QString ylabel, QString title, int bins, QWidget *parent)
-    : xlabel(xlabel), ylabel(ylabel), title(title),  QDialog{parent}
+PlotHistDialog::PlotHistDialog(QString xlable, QString ylable, QString title, int bins, QWidget *parent)
+    : xlabel(xlable), ylabel(ylable), title(title), QDialog{parent}
 {
     QVBoxLayout *mainlayout = new QVBoxLayout;
 
-    QLabel *titleWidget = new QLabel(tr("Plot title: "));
-    mainlayout->addWidget(titleWidget);
+    QLabel *titleLable = new QLabel(tr("Plot title:"));
+    mainlayout->addWidget(titleLable);
     mainlayout->addWidget(&this->title);
 
-    QLabel *xLabelWidget = new QLabel(tr("X axis label: "));
-    mainlayout->addWidget(xLabelWidget);
+    QLabel *xLableLable = new QLabel(tr("X axis lable:"));
+    mainlayout->addWidget(xLableLable);
     mainlayout->addWidget(&this->xlabel);
 
-    QLabel *yLabelWidget = new QLabel(tr("Y axis label: "));
-    mainlayout->addWidget(yLabelWidget);
+    QLabel *yLableLable = new QLabel(tr("Y axis lable:"));
+    mainlayout->addWidget(yLableLable);
     mainlayout->addWidget(&this->ylabel);
 
-    QLabel *binsWidget = new QLabel(tr("Bin count:"));
-    mainlayout->addWidget(binsWidget);
+    QLabel *binsLable = new QLabel(tr("Bin count:"));
+    mainlayout->addWidget(binsLable);
     this->bins.setValue(bins);
     mainlayout->addWidget(&this->bins);
 

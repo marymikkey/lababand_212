@@ -20,10 +20,11 @@ public:
     struct VisualOptions
     {
         bool visible = true;
-        int width = 1;
+        int width = 3;
         Qt::PenStyle line_type = Qt::SolidLine;
         QCPScatterStyle::ScatterShape point_type = QCPScatterStyle::ScatterShape::ssNone;
-        QColor color = "red";
+        QColor color = "darkCyan";
+//        QColor color1 = "darkGreen";
 
         static QMap<Qt::PenStyle, QString> line_types;
         static QMap<QCPScatterStyle::ScatterShape, QString> point_types;

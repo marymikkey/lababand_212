@@ -53,6 +53,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->errors_tableView->setItemDelegateForColumn(0, new ComboBoxDelegate(VariableData::Error::error_types.values()));
 
     Manager::instance()->plot = new PlotScatter;//PlotChoice();//PlotHistogramm();//PlotScatter;
+    Manager::instance()->plot = new PlotChoice({
+        {"Scatter plot", new PlotScatter},
+        {"Histogram plot", new PlotHist},
+        {"2d scatter plot", new Plot2d("",
+                                       "")}});
     Manager::instance()->plot->draw(ui->plot);
 
     connect(ui->actionReplot, SIGNAL(triggered()), this, SLOT(draw()));
@@ -87,9 +92,9 @@ void MainWindow::save()
     QString fname = QFileDialog::getSaveFileName(this, tr("Save File"),
                                                  "data.json",
                                                  tr("JSON data file (*.json)"));
-                                                 //tr("CSV data file (*.csv)"));
+    //tr("CSV data file (*.csv)"));
     QFile f(fname);
-    f.open(QIODeviceBase::WriteOnly | QIODeviceBase::Truncate | QIODeviceBase::Text);
+    f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
     QTextStream out(&f);
     //out<<IOJson().save();
 }
@@ -100,9 +105,9 @@ void MainWindow::load()
     QString fname = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                  "data.json",
                                                  tr("JSON data file (*.json)"));
-                                                 //tr("CSV data file (*.csv)"));
+    //tr("CSV data file (*.csv)"));
     QFile f(fname);
-    f.open(QIODeviceBase::ReadOnly | QIODeviceBase::Text);
+    f.open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream in(&f);
     //IOJson().load(in.readAll());
 }

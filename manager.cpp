@@ -77,7 +77,8 @@ int Manager::getMeasurementCount() const{
 void Manager::addMeasurement()
 {
     int size = getMeasurementCount();
-    for (auto& v: variables) v.values.resize(size + 1);
+    for (auto& v: variables) v.values.append(0);
+//            resize(size + 1);
     for (auto& v: variables) v.values[size] = size + 0.5;
 }
 
@@ -85,7 +86,7 @@ void Manager::removeMeasurement()
 {
     int size = getMeasurementCount();
     if (size==0) return;
-    for (auto& v:variables) v.values.resize(size - 1);
+    for (auto& v:variables) v.values.removeLast();
 }
 
 void Manager::removeMeasurementRow(int row){
