@@ -42,8 +42,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->visual_tableView->setModel(new VisualModel());
     ui->visual_tableView->setItemDelegateForColumn(4, new ColorDelegate());
-    ui->visual_tableView->setItemDelegateForColumn(3, new ComboBoxDelegate(VariableData::VisualOptions::point_types.values()));
-    ui->visual_tableView->setItemDelegateForColumn(2, new ComboBoxDelegate(VariableData::VisualOptions::line_types.values()));
+    ui->visual_tableView->setItemDelegateForColumn(2, new ComboBoxDelegate(VariableData::VisualOptions::point_types.values()));
+    ui->visual_tableView->setItemDelegateForColumn(3, new ComboBoxDelegate(VariableData::VisualOptions::line_types.values()));
 
     ui->naming_tableView->setModel(new NamingModel());
 
@@ -67,6 +67,8 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(ui->actionLoad, SIGNAL(triggered()), this, SLOT(load()));
     //connect(ui->pushButtonColumnAdd, SIGNAL(clicked()), this, SLOT(addVariable()));
     //connect(ui->pushButtonRowAdd, SIGNAL(clicked()), this, SLOT(addRow()));
+    connect(ui->pushButtonColumnAdd, SIGNAL(clicked()), this, SLOT(addVariable()));
+    connect(ui->pushButtonRowAdd, SIGNAL(clicked()), this, SLOT(addRow()));
 }
 
 
