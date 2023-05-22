@@ -13,11 +13,10 @@ void PlotScatter::draw(QCustomPlot *plot)
         if (!v->visual.visible) continue;
         auto graph = plot->addGraph();
         QPen pen;
-        pen.setColor(v->visual.color);
-        pen.setStyle(Qt::DashDotLine);
+        pen.setColor(QColor(i*100, i*100, i*100));
         pen.setWidth(v->visual.width);
         graph->setPen(pen);
-//        graph->setScatterStyle(v->visual.point_type);
+        graph->setScatterStyle(v->visual.point_type);
         graph->setName(v->fullNaming);
 
         QCPErrorBars *errorBars = new QCPErrorBars(plot->xAxis, plot->yAxis);

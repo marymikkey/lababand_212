@@ -17,15 +17,15 @@ int DataModel::columnCount(const QModelIndex &parent) const
 QVariant DataModel::data(const QModelIndex &index, int role) const
 {
     int row = index.row();
-    int variable  = index.column();
+    int variable = index.column();
     VariableData* v = Manager::instance()->getChoiceVarCalc(variable);
 
     if (v->measurements.size() <= row) return QVariant();
 
     if (role == Qt::DisplayRole)
     {
-        QVariant r = QVariant(v->measurements[row]).toString();// + " ± " +
-                    //QVariant(v->ierror(row)).toString();
+        QVariant r = QVariant(v->measurements[row]).toString() + " ± " +
+                                                                 QVariant(v->ierror(row)).toString();
         return r;
     }
     return QVariant();
@@ -85,4 +85,3 @@ void DataModel::insertRow(int row)
     endInsertRows();
     extraRows++;
 }
-

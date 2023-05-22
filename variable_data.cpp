@@ -57,3 +57,20 @@ double VariableData::getError(int measurement) const
             throw "Calculated variables not yet implemented";
     }
 }
+
+double VariableData::ierror(int index)
+{
+    switch(int(VariableData::error.type))
+    {
+    case Error::Type::Relative:
+            return VariableData::error.value * VariableData::measurements.at(index);
+    case Error::Type::Absolute:
+            return VariableData::error.value;
+    case Error::Type::CalculatedValue:
+            //return calcErrors.at(index);
+            return VariableData::error.value;
+    default:
+            throw "Uncorrected Type of Error";
+    }
+
+}

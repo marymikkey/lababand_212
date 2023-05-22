@@ -25,7 +25,9 @@ void Plot2d::draw(QCustomPlot *plot)
     pen.setWidth(8);
     graph->setPen(pen);
     graph->setScatterStyle(yv->visual.point_type);
+    graph->setScatterStyle(QCPScatterStyle::ssDot);
     graph->setLineStyle(QCPGraph::lsNone);
+
 
     QCPErrorBars *errorBarsX = new QCPErrorBars(plot->xAxis, plot->yAxis);
     QCPErrorBars *errorBarsY = new QCPErrorBars(plot->yAxis, plot->xAxis);

@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->errors_tableView->setModel(new ErrorModel());
     ui->errors_tableView->setItemDelegateForColumn(0, new ComboBoxDelegate(VariableData::Error::error_types.values()));
 
-    Manager::instance()->plot = new PlotScatter;//PlotChoice();//PlotHistogramm();//PlotScatter;
+//    Manager::instance()->plot = new PlotScatter;//PlotChoice();//PlotHistogramm();//PlotScatter;
     Manager::instance()->plot = new PlotChoice({
         {"Scatter plot", new PlotScatter},
         {"Histogram plot", new PlotHist},
